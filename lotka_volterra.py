@@ -15,7 +15,7 @@ preycolor = 'blue'
 class Lotka_Volterra(object):
     '''Sets up a simple Lotka_Volterra system'''
     
-    def __init__(self, pdgrow,pddie,pygrow,pydie,tmax,timestep):
+    def __init__(self, pdgrow,pddie,pygrow,pydie,tmax,timestep,prey_capacity=100.0,predator_capacity = 100.0):
         '''Create Lotka-Volterra system'''
         
         self.n = int(tmax/timestep)
@@ -27,6 +27,8 @@ class Lotka_Volterra(object):
         self.preydie = pydie
         self.predgrow = pdgrow
         self.preddie = pddie
+        self.prey_capacity = prey_capacity
+        self.predator_capacity = predator_capacity
         
     def set_initial_conditions(self,pdzero,pyzero, tzero=0.0):
         '''set initial conditions'''
@@ -42,9 +44,18 @@ class Lotka_Volterra(object):
             self.predator[i+1] = self.predator[i] + self.dt*self.predator[i]*(self.predgrow*self.prey[i] - self.preddie)
             self.prey[i+1] = self.prey[i] + self.dt*self.prey[i]*(self.preygrow - self.predator[i]*self.preydie)
 
+    
+    def integrate_logistic(self):
+        '''integrate Lotka-Volterra system assuming logistic growth (simple Euler method)'''
         
+        for i in range(self.n-1):
+            self.time[i+1] = self.time[i]+self.dt
+            self.predator[i+1] = self.predator[i] + self.dt*self.predator[i]*(self.predgrow*self.prey[i]*(1.0 - self.predator[i]/self.predator_capacity) - self.preddie)
+            self.prey[i+1] = self.prey[i] + self.dt*self.prey[i]*self.preygrow*(1.0-self.prey[i]/self.prey_capacity) - self.prey[i]*self.predator[i]*self.preydie
+            #print self.time[i], self.predator[i],self.prey[i]
+    
     def integrate_stochastic(self):
-        '''integrate vanilla Lotka-Volterra system (simple Euler method)'''
+        '''integrate vanilla Lotka-Volterra system with stochastic predator death rate (simple Euler method)'''
         for i in range(self.n-1):
                         
             self.time[i+1] = self.time[i] + self.dt
@@ -52,7 +63,7 @@ class Lotka_Volterra(object):
             self.prey[i+1] = self.prey[i] + self.dt*self.prey[i]*(self.preygrow*(1-0.1)*np.random.rand() - self.predator[i]*self.preydie)
 
             
-    def plot_vs_time(self, filename='populations_vs_time.png'):
+    def plot_vs_time(self, filename='populations_vs_time.png', plot_capacity=False):
         
         '''Plot both populations vs time'''
         fig1 = plt.figure()
@@ -65,7 +76,9 @@ class Lotka_Volterra(object):
         ax2.tick_params('y', colors='blue', color=preycolor)
         ax1.plot(self.time, self.predator, label='Predator', color=predcolor)
         ax2.plot(self.time, self.prey, label = 'Prey', color = preycolor)
-        
+        if(plot_capacity):
+            ax2.axhline(self.prey_capacity, label= 'Prey carrying capaicty', color=preycolor, linestyle='dashed')
+            ax2.axhline(self.predator_capacity, label= 'Predator carrying capaicty', color=predcolor, linestyle='dashed')
         plt.show()
         fig1.savefig(filename)
         
