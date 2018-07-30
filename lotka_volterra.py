@@ -69,7 +69,7 @@ class Lotka_Volterra(object):
         fig1 = plt.figure()
         ax1 = fig1.add_subplot(111)
         ax2 = ax1.twinx()
-        ax1.set_xlabel('Time')
+        ax1.set_xlabel('Time', fontsize=22)
         ax1.set_ylabel(predlabel,fontsize=22, color=predcolor)
         ax1.tick_params('y', colors=predcolor)
         ax2.set_ylabel(preylabel,fontsize=22, color=preycolor)
@@ -77,8 +77,8 @@ class Lotka_Volterra(object):
         ax1.plot(self.time, self.predator, label='Predator', color=predcolor)
         ax2.plot(self.time, self.prey, label = 'Prey', color = preycolor)
         if(plot_capacity):
-            ax2.axhline(self.prey_capacity, label= 'Prey carrying capaicty', color=preycolor, linestyle='dashed')
-            ax2.axhline(self.predator_capacity, label= 'Predator carrying capaicty', color=predcolor, linestyle='dashed')
+            ax2.axhline(self.prey_capacity, label= 'Prey carrying capacity', color=preycolor, linestyle='dashed')
+        #ax2.axhline(self.predator_capacity, label= 'Predator carrying capacity', color=predcolor, linestyle='dashed')
         plt.show()
         fig1.savefig(filename)
         
