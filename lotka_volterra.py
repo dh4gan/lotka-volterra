@@ -74,13 +74,13 @@ class Lotka_Volterra(object):
         ax1.tick_params('y', colors=predcolor)
         ax2.set_ylabel(preylabel,fontsize=22, color=preycolor)
         ax2.tick_params('y', colors='blue', color=preycolor)
-        ax1.plot(self.time, self.predator, label='Predator', color=predcolor)
+        ax1.plot(self.time, self.predator, label='Predator', color=predcolor, linestyle='dashed')
         ax2.plot(self.time, self.prey, label = 'Prey', color = preycolor)
         if(plot_capacity):
-            ax2.axhline(self.prey_capacity, label= 'Prey carrying capacity', color=preycolor, linestyle='dashed')
+            ax2.axhline(self.prey_capacity, label= 'Prey carrying capacity', color=preycolor, linestyle='dotted')
         #ax2.axhline(self.predator_capacity, label= 'Predator carrying capacity', color=predcolor, linestyle='dashed')
         plt.show()
-        fig1.savefig(filename)
+        fig1.savefig(filename, dpi=300)
         
     def plot_predator_vs_prey(self, filename = 'predator_vs_prey.png'):
         
@@ -92,7 +92,7 @@ class Lotka_Volterra(object):
         ax1.set_ylabel(preylabel,fontsize=22)
         ax1.plot(self.predator,self.prey, color='black')
         plt.show()
-        fig1.savefig(filename)
+        fig1.savefig(filename,dpi=300)
         
     def plot_both_figures(self):
         
